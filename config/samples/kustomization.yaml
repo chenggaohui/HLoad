@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- hload_v1_hloadcore.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

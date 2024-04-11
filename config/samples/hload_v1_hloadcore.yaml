@@ -1,0 +1,9 @@
+apiVersion: hload.hload.com/v1
+kind: HLoadCore
+metadata:
+  labels:
+    app.kubernetes.io/name: hload
+    app.kubernetes.io/managed-by: kustomize
+  name: hloadcore-sample
+spec:
+  # TODO(user): Add fields here

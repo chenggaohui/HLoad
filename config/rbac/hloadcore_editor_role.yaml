@@ -1,0 +1,31 @@
+# permissions for end users to edit hloadcores.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: hloadcore-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: hload
+    app.kubernetes.io/part-of: hload
+    app.kubernetes.io/managed-by: kustomize
+  name: hloadcore-editor-role
+rules:
+- apiGroups:
+  - hload.hload.com
+  resources:
+  - hloadcores
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hload.hload.com
+  resources:
+  - hloadcores/status
+  verbs:
+  - get
