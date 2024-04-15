@@ -4,6 +4,21 @@ metadata:
   labels:
     app.kubernetes.io/name: hload
     app.kubernetes.io/managed-by: kustomize
-  name: hloadcore-sample
+  name: hloadcore-nginx
 spec:
   # TODO(user): Add fields here
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+        - name: app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              protocol: TCP

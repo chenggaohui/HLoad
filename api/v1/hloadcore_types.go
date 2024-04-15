@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,11 +26,15 @@ import (
 
 // HLoadCoreSpec defines the desired state of HLoadCore
 type HLoadCoreSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Foo is an example field of HLoadCore. Edit hloadcore_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Selector is a label query over pods that should match the replica count.
+	Selector *metav1.LabelSelector `json:"selector"`
+
+	// Template describes the pods that will be created.
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Template v1.PodTemplateSpec `json:"template"`
 }
 
 // HLoadCoreStatus defines the observed state of HLoadCore
