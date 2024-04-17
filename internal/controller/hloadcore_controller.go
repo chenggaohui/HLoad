@@ -19,12 +19,10 @@ package controller
 import (
 	"context"
 
+	hloadv1 "hload.com/m/api/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	hloadv1 "hload.com/m/api/v1"
 )
 
 // HLoadCoreReconciler reconciles a HLoadCore object
@@ -47,8 +45,7 @@ type HLoadCoreReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.2/pkg/reconcile
 func (r *HLoadCoreReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
-
+	println("收到k8s的Reconcile请求...........")
 	// TODO(user): your logic here
 
 	return ctrl.Result{}, nil
