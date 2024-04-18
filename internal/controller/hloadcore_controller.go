@@ -18,6 +18,12 @@ package controller
 
 import (
 	"context"
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/klog/v2"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"time"
 
 	hloadv1 "hload.com/m/api/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -46,8 +52,40 @@ type HLoadCoreReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.2/pkg/reconcile
 func (r *HLoadCoreReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	println("收到k8s的Reconcile请求...........")
-	// TODO(user): your logic here
+	// 获取控制器对象中的 template，例如 Deployment 的 Pod 模板
+	hLoadCore := &hloadv1.HLoadCore{}
+	err := r.Get(ctx, req.NamespacedName, hLoadCore)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			klog.Info("hLoadCore delete...")
+			//TODO 删除资源逻辑
+			return ctrl.Result{}, nil
+		}
+		return ctrl.Result{RequeueAfter: time.Minute}, err
+	}
+	podTemplate := hLoadCore.Spec.Template
+	// 创建 Pod 对象
+	pod := &v1.Pod{
+		ObjectMeta: podTemplate.ObjectMeta,
+		Spec:       podTemplate.Spec,
+	}
 
+	// 设置 OwnerReference，将 Pod 与控制器对象关联起来
+	if err := controllerutil.SetControllerReference(hLoadCore, pod, r.Scheme); err != nil {
+		return reconcile.Result{}, err
+	}
+	//err = r.Create(ctx, pod)
+	//if err != nil {
+	//	klog.Error("create pod error:", err.Error())
+	//	return ctrl.Result{RequeueAfter: time.Minute}, err
+	//}
+	//klog.Info("create pod success.")
+	//hLoadCore.Status.Message = "reconcile success end time:" + time.Now().Format("2006-01-02 15:04:05")
+	//err = r.Update(ctx, hLoadCore)
+	//if err != nil {
+	//	klog.Error("update hLoadCore status error")
+	//	return ctrl.Result{RequeueAfter: time.Minute}, err
+	//}
 	return ctrl.Result{}, nil
 }
 
